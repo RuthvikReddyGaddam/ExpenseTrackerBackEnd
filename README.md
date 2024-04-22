@@ -12,10 +12,10 @@ This Expense Tracker Backend is designed to provide a robust and scalable backen
 7. Validation: Input validation and error handling for robust data processing.
 
 ## Installation
-> Clone the repository
-> Install dependencies
-> Configure environment variables
-> Start the server
+Clone the repository
+Install dependencies
+Configure environment variables
+Start the server
 
 ## Technologies Used
 Node.js
