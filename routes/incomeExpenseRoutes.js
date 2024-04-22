@@ -65,19 +65,21 @@ router.post('/:newIncomeExpense', verifyToken, async (req, res) => {
         incomeExpense.categoryId = category._id;
         incomeExpense.user = req.user._id;
         let result = {}
+        let user = await User.findOne({_id: req.user._id});
+        let balance = user.balance;
         if (req.params.newIncomeExpense === 'newExpense') {
-            req.user.balance = req.user.balance - incomeExpense.amount;
-            await User.findOneAndUpdate({_id: req.user._id, }, {balance: req.user.balance});
+            balance = balance - incomeExpense.amount;
+            await User.findOneAndUpdate({_id: req.user._id }, {balance: balance});
             if(incomeExpense.receipt === ""){incomeExpense.receipt = process.env.DEFAULT_RECEIPT}
             result = await Expense.create(incomeExpense);
             const url = await getImageFromS3(incomeExpense.receipt);
             result.receipt = url;
         } else {
-            req.user.balance = req.user.balance + incomeExpense.amount;
-            await User.findOneAndUpdate({_id: req.user._id }, {balance: req.user.balance})
+           balance = balance + incomeExpense.amount;
+            await User.findOneAndUpdate({_id: req.user._id }, {balance: balance})
             result = await Income.create(incomeExpense);
         }
-        if(req.user.balance < 0 && !req.alreadySent){
+        if(balance < 0 && !req.alreadySent){
             req.alreadySent = true;
             sendEmail(req.user.fullname, req.user.balance, req.user.email);
         }else{
@@ -103,20 +105,24 @@ router.patch("/updateBudgetGoals", verifyToken, async (req, res) => {
 
 router.delete('/:incomeExpense', verifyToken, async (req, res) => {
     try{
+        
+        let user = await User.findOne({_id: req.user._id});
+        let balance = user.balance;
         if (req.params.incomeExpense === 'deleteExpense') {
-        req.user.balance = req.user.balance + req.body.amount;
-        await User.findOneAndUpdate({_id: req.user._id, }, {balance: req.user.balance});
+        balance = balance + req.body.amount;
+        
+        await User.findOneAndUpdate({_id: req.user._id, }, {balance: balance});
         const expenseItem = await Expense.findOne({ _id: req.body._id})
         if(expenseItem.receipt !== process.env.DEFAULT_RECEIPT){
             await deleteFromS3(expenseItem.receipt);
         }
         await Expense.findOneAndDelete({ _id: req.body._id });
     } else {
-        req.user.balance = req.user.balance - req.body.amount;
-        await User.findOneAndUpdate({_id: req.user._id, }, {balance: req.user.balance});
+        balance = balance - req.body.amount;
+        await User.findOneAndUpdate({_id: req.user._id, }, {balance: balance});
         await Income.findOneAndDelete({ _id: req.body._id });
     }
-    if(req.user.balance < 0 && !req.alreadySent){
+    if(balance < 0 && !req.alreadySent){
         req.alreadySent = true;
         sendEmail(req.user.fullname, req.user.balance, req.user.email);
     }else{
