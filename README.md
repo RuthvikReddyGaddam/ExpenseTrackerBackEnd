@@ -1,6 +1,6 @@
 # Expense Tracker Backend
 ## Overview
-This Expense Tracker Backend is designed to provide a robust and scalable backend solution for managing expense tracking data. It offers RESTful APIs for handling user authentication, expense management, category management, and report generation.
+This Expense Tracker Backend is designed to provide a robust and scalable backend solution for managing expense tracking data. It offers RESTful APIs for handling user authentication, expense management, and category management
 
 ## Features
 1. User Authentication: Secure user authentication using JWT (JSON Web Tokens).
