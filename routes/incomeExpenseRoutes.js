@@ -68,7 +68,7 @@ router.post('/:newIncomeExpense', verifyToken, async (req, res) => {
         if (req.params.newIncomeExpense === 'newExpense') {
             req.user.balance = req.user.balance - incomeExpense.amount;
             await User.findOneAndUpdate({_id: req.user._id, }, {balance: req.user.balance});
-            if(incomeExpense.receipt === ""){incomeExpense.receipt = process.env.DEFAULT_PROFILE}
+            if(incomeExpense.receipt === ""){incomeExpense.receipt = process.env.DEFAULT_RECEIPT}
             result = await Expense.create(incomeExpense);
             const url = await getImageFromS3(incomeExpense.receipt);
             result.receipt = url;
@@ -107,7 +107,7 @@ router.delete('/:incomeExpense', verifyToken, async (req, res) => {
         req.user.balance = req.user.balance + req.body.amount;
         await User.findOneAndUpdate({_id: req.user._id, }, {balance: req.user.balance});
         const expenseItem = await Expense.findOne({ _id: req.body._id})
-        if(expenseItem.receipt !== process.env.DEFAULT_PROFILE){
+        if(expenseItem.receipt !== process.env.DEFAULT_RECEIPT){
             await deleteFromS3(expenseItem.receipt);
         }
         await Expense.findOneAndDelete({ _id: req.body._id });

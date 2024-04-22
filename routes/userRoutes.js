@@ -14,6 +14,8 @@ const {uploadToS3, getImageFromS3} = require('../s3');
 router.get('/', verifyToken, async (req, res) => {
     try {
         if (req.user) {
+            const DoB = new Date(req.user.DoB).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }) 
+            req.user.DoB = DoB;
             res.send(JSON.stringify(req.user));
         } else {
             res.status(404).json({ message: 'User not found!' });
@@ -70,7 +72,7 @@ router.post("/uploadProfile", upload.single("profile"), async (req, res) => {
             const receiptImage = await uploadToS3(req.file.buffer, req.file.mimetype);
             res.send({ imageUrl: receiptImage });
         } else {
-            res.statusCode(404).send({ message: "File type invalid!" })
+            res.status(404).send({ message: "File type invalid!" })
         }
     } catch (err) {
         res.send(err);
