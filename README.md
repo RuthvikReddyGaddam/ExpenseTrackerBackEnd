@@ -12,15 +12,15 @@ This Expense Tracker Backend is designed to provide a robust and scalable backen
 7. Validation: Input validation and error handling for robust data processing.
 
 ## Installation
-Clone the repository
-Install dependencies
-Configure environment variables
+Clone the repository | 
+Install dependencies | 
+Configure environment variables | 
 Start the server
 
 ## Technologies Used
-Node.js
-Express.js
-MongoDB
-Mongoose
-JSON Web Tokens (JWT)
-Bcrypt.js
+Node.js | 
+Express.js | 
+MongoDB | 
+Mongoose | 
+JSON Web Tokens (JWT) | 
+Bcrypt.js | 
