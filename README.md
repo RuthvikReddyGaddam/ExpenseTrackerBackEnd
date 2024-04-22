@@ -23,4 +23,4 @@ Express.js |
 MongoDB | 
 Mongoose | 
 JSON Web Tokens (JWT) | 
-Bcrypt.js | 
+Bcrypt.js
